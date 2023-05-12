@@ -3,5 +3,11 @@
   "version": "0.1.0",
   "engines": {
     "node": ">=16.x"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0"
+  },
+  "dependencies": {
+    "eslint": "^8.40.0"
   }
 }
