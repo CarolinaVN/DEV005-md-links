@@ -1,4 +1,5 @@
 
-const mdLinks  = (path, options) => {
+/* const mdLinks  = (path, options) => {
 
 }
+ */
