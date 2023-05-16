@@ -1,7 +1,2 @@
-
-
-
 [Has Click aqui para ver el prototipo en Figma](https://www.figma.com/file/PeRrZCA9exMS7emOrTOCbm/Prototipo-alta-fidelidad-data-Pokemon-Go?node-id=0%3A1&t=q0JyDs3WEiaoouoM-1)
-
-
 ![md-links](https://user-images.githubusercontent.com/110297/42118443-b7a5f1f0-7bc8-11e8-96ad-9cc5593715a6.jpg)

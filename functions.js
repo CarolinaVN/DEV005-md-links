@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 //const colors = require('colors');
 
-const route = '/Users/carolinavera/Desktop/LABORATORIA/DEV005-data-lovers/FAQ.md';
+const route = '/Users/carolinavera/Desktop/LABORATORIA/DEV005-data-lovers';
 const routeDirectorio = '/Users/carolinavera/Desktop/LABORATORIA/DEV005-md-links/prueba';
 //const routeFail = '/Users/carolinavera/Desktop/LABORATORIA/DEV005-data-lovers/Fail.md';
 const relativeRoute = './DEV005-data-lovers/FAQ.md'
@@ -40,7 +40,37 @@ const recursive = (route) => {
   }
   return arrayMd.filter(file => path.extname(file) === '.md');
 }
+const arrayMd = recursive(routeDirectorio);
  console.log('Archivos con extensión .md:', recursive(routeDirectorio));
+
+ //------------leer los archivos MD ---------------------
+  const readMD = (arrayMd) =>
+  new Promise((resolve, reject) => {
+    fs.readFile(arrayMd, 'utf8', (err, data) => {
+      if (err) reject(new Error(err));
+      resolve(data);
+    });
+  });
+  const readMDs = (arrayMd) => {
+    return Promise.all(arrayMd.map((element) => readMD(element)))
+      .then((results) => {
+        console.log('Elementos de los archivos MD', results);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+  
+  readMDs(arrayMd);
+
+  //----------- Buscar Links ---------------
+
+  //const urlLink = /^\[([\w\s\d]+)\]\((https?:\/\/[\w\d./?=#]+)\)$/
+
+
+
+ 
+
 
 
 // ------------ Buscar archivos con extensión MD ---------------
@@ -71,5 +101,15 @@ console.log('exists:', pathExists); */
 /* let pathFail = fs.existsSync(routeFail);
 console.log('exists:', pathFail); */
 
+ //------------leer los archivos MD ---------------------
+/*   fs.readFile('prueba.txt', 'utf8', (err, data) => {
+    if (err) throw err;
+    console.log(data);
+  });  */
 
 
+module.exports = {
+  pathExists,
+  absolutePath,
+  recursive,
+}
