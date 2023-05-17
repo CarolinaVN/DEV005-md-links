@@ -10,5 +10,9 @@
   },
   "scripts": {
     "test": "jest --coverage"
+  },
+  "dependencies": {
+    "jsdom": "^22.0.0",
+    "markdown-it": "^13.0.1"
   }
 }
