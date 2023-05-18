@@ -49,8 +49,6 @@ const recursive = (route) => {
 const arrayMd = recursive(userPath);
  console.log('Archivos con extensión .md:', recursive(userPath));
 
-
-
   //----------- Buscar Links ---------------
   const getLinks = (file) => {
     const md = new markdownIt();
@@ -59,13 +57,16 @@ const arrayMd = recursive(userPath);
     const { document } = dom.window;
     const links = document.querySelectorAll('a');
     let allLinks = [];
-  
-    links.forEach((link) => {
-      const href = link.getAttribute('href');
-      if (href.startsWith('https')) {
-        allLinks = allLinks.concat(href);
-      }
-    });
+
+      links.forEach((link) => {
+        const href = link.getAttribute('href');
+        const text = link.textContent;
+        const file = userPath;
+        if (href.startsWith('https')){
+        allLinks.push({ href, text, file });
+        }
+      });
+   
     console.log(allLinks);
     return allLinks;
   };
@@ -92,11 +93,6 @@ const arrayMd = recursive(userPath);
  
 
   //const urlLink = /^\[([\w\s\d]+)\]\((https?:\/\/[\w\d./?=#]+)\)$/
-
-
-
- 
-
 
 
 // ------------ Buscar archivos con extensión MD ---------------

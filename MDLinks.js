@@ -1,4 +1,4 @@
-/* const {
+const {
     pathExists,
     absolutePath,
     recursive,
@@ -15,7 +15,7 @@ const mdLinks  = (path, options) => {
           }
     })
 
- }; */
+ };
 
 
 
