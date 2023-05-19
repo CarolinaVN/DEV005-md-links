@@ -51,13 +51,14 @@ const arrayMd = recursive(userPath);
 
   //----------- Buscar Links ---------------
   const getLinks = (file) => {
+    let allLinks = [];
+    file.forEach((e) => {
     const md = new markdownIt();
-    const content = md.render(file);
+    const content = md.render(e);
     const dom = new JSDOM(content);
     const { document } = dom.window;
     const links = document.querySelectorAll('a');
-    let allLinks = [];
-
+  
       links.forEach((link) => {
         const href = link.getAttribute('href');
         const text = link.textContent;
@@ -66,9 +67,8 @@ const arrayMd = recursive(userPath);
         allLinks.push({ href, text, file });
         }
       });
-   
-    console.log(allLinks);
-    return allLinks;
+    })
+    return allLinks ;
   };
  //------------leer los archivos MD ---------------------
   const readMD = (arrayMd) =>
@@ -76,13 +76,12 @@ const arrayMd = recursive(userPath);
     fs.readFile(arrayMd, 'utf8', (err, data) => {
       if (err) reject(new Error(err));
       resolve(data, '\n');
-      getLinks(data);
     });
   });
   const readMDs = (arrayMd) => {
     return Promise.all(arrayMd.map((element) => readMD(element)))
       .then((elementsMD) => {
-        elementsMD
+        console.log(getLinks(elementsMD));
       })
       .catch((error) => {
         console.error(error);
