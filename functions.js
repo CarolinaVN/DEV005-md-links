@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const MarkdownIt = require('markdown-it');
 const { JSDOM } = require('jsdom');
+// const fetch = require('node-fetch');
 // const colors = require('colors');
 
 const userPath = process.argv[2];
@@ -15,69 +16,97 @@ const userPath = process.argv[2];
 // ------------- Valida sí la ruta existe  -------------------
 const pathExists = (route) => fs.existsSync(route);
 pathExists(userPath);
-
+// console.log(pathExists(userPath));
 // ---------- Convierte una ruta relativa en absoluta ----------
 const absolutePath = (route) => path.resolve(route);
 absolutePath(userPath);
 
 // --Función recursiva --- Buscar archivos con extensión MD ----
-// const extMD = (route) => path.extname(route) === '.md';
-const recursive = (route) => {
-  let arrayMd = [];
-  if (fs.statSync(route).isFile()) {
-    arrayMd.push(route);
-  } else {
+const recursive = (route, arrayMd = []) => {
+  const stats = fs.statSync(route);
+
+  if (stats.isFile() && path.extname(route) === '.md') {
+    const absolute = absolutePath(route);
+    arrayMd.push(absolute);
+  } else if (stats.isDirectory()) {
     const elements = fs.readdirSync(route);
     elements.forEach((element) => {
       const newRoute = path.join(route, element);
-      if (fs.statSync(newRoute).isDirectory()) {
-        arrayMd = arrayMd.concat(recursive(newRoute));
-      } else {
-        arrayMd.push(newRoute);
-      }
+      const newAbsolute = absolutePath(newRoute);
+      recursive(newAbsolute, arrayMd);
     });
+  } else if (path.extname(route) !== '.md') {
+    return null;
   }
-  return arrayMd.filter((file) => path.extname(file) === '.md');
+  return arrayMd;
 };
-const arrayMd = recursive(userPath);
+// recursive(userPath); // .filter((file) => path.extname(file) === '.md');
+// ________para probar test
+// recursive(routeDirectorio);
 console.log(recursive(userPath));
 
 // ----------- Buscar Links ---------------
-const getLinks = (files) => {
+const getLinks = (data, file) => {
   const allLinks = [];
-  files.forEach((e) => {
-    const md = new MarkdownIt();
-    const content = md.render(e);
-    const dom = new JSDOM(content);
-    const { document } = dom.window;
-    const links = document.querySelectorAll('a');
+  const md = new MarkdownIt();
+  const content = md.render(data);
+  const dom = new JSDOM(content);
+  const { document } = dom.window;
+  const links = document.querySelectorAll('a');
 
-    links.forEach((link) => {
-      const href = link.getAttribute('href');
-      const text = link.textContent;
-      const file = userPath;
-      if (href.startsWith('https')) {
-        allLinks.push({ href, text, file });
-      }
-    });
+  links.forEach((link) => {
+    const href = link.getAttribute('href');
+    const text = link.textContent;
+    if (href.startsWith('https')) {
+      allLinks.push({ href, text, file });
+    }
   });
   return allLinks;
 };
+/* /* getLinks(userPath).forEach((link) => {
+  fetch(link.href)
+    .then((response) => {
+      if (response.ok) {
+        console.log(`Link OK: ${link.href}`);
+      } else {
+        console.log(`Link Fail: ${link.href}`);
+      }
+    })
+    .catch((error) => {
+      console.log(`Hubo un problema con la petición Fetch: ${error.message}`);
+    });
+  return allLinks;
+}; */
 // ------------leer los archivos MD ---------------------
-const readMD = (Md) => new Promise((resolve, reject) => {
-  fs.readFile(Md, 'utf8', (err, data) => {
+const readMD = (mD) => new Promise((resolve, reject) => {
+  fs.readFile(mD, 'utf8', (err, data) => {
     if (err) reject(new Error(err));
-    resolve(data, '\n');
+    resolve(getLinks(data, mD));
   });
 });
-const readMDs = (arrMd) => Promise.all(arrMd.map((element) => readMD(element)))
-  .then((elementsMD) => {
-    console.log(getLinks(elementsMD));
-  })
-  .catch((error) => {
-    console.error(error);
-  });
-readMDs(arrayMd);
+
+/* fetch('https://developer.mozilla.org/') =>
+  .then((response) => response.stats)
+  .then((data) => console.log(data)); */
+
+module.exports = {
+  userPath,
+  pathExists,
+  absolutePath,
+  recursive,
+  getLinks,
+  readMD,
+};
+
+/*
+const readMDs = Promise.all(recursive(path).map((element) => readMD(element)))
+    .then((elementsMD) => {
+      const juntar = [].concat(...elementsMD);
+      resolve(juntar);
+    })
+    .catch((error) => {
+      reject(error);
+    }); */
 
 // const urlLink = /^\[([\w\s\d]+)\]\((https?:\/\/[\w\d./?=#]+)\)$/
 
@@ -121,10 +150,24 @@ console.log(pathExists(userPath)); */
     }
 }); */
 
-module.exports = {
-  pathExists,
-  absolutePath,
-  // recursive,
-  // getLinks,
-  // readMDs,
+// --Función recursiva --- Buscar archivos con extensión MD ----
+// const extMD = (route) => path.extname(route) === '.md';
+/* const recursive = (route) => {
+  let arrayMd = [];
+  if (fs.statSync(route).isFile()) {
+    arrayMd.push(route);
+  } else {
+    const elements = fs.readdirSync(route);
+    elements.forEach((element) => {
+      const newRoute = path.join(route, element);
+      if (fs.statSync(newRoute).isDirectory()) {
+        arrayMd = arrayMd.concat(recursive(newRoute));
+      } else {
+        arrayMd.push(newRoute);
+      }
+    });
+  }
+  return arrayMd.filter((file) => path.extname(file) === '.md');
 };
+const arrayMd = recursive(userPath);
+console.log(recursive(userPath)); */

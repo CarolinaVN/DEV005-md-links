@@ -1,10 +1,13 @@
-// eslint-disable-next-line import/no-unresolved
+const fs = require('fs');
 const path = require('path');
-// const fs = require('fs');
+const MarkdownIt = require('markdown-it');
+const { JSDOM } = require('jsdom');
 const {
   pathExists,
   absolutePath,
   recursive,
+  // getLinks,
+  readMDs,
 } = require('../functions');
 // getLinks,
 // readMDs,
@@ -12,8 +15,8 @@ const {
 
 describe('Funciones', () => {
   it('la ruta existe', () => {
-    const route = '/Users/carolinavera/Desktop/LABORATORIA/DEV005-md-links/prueba/prueba.md';
-    expect(pathExists(route)).toBe(true);
+    const userPath = '/Users/carolinavera/Desktop/LABORATORIA/DEV005-md-links/prueba/prueba.md';
+    expect(pathExists(userPath)).toBe(true);
   });
 
   it('Retorna una ruta absoluta', () => {
