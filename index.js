@@ -5,16 +5,10 @@ const {
 } = require('./functions');
 
 const mdLinks = (path) => new Promise((resolve, reject) => {
-  /*  if (pathExists(path) === false) {
-    reject(new Error('La ruta no existe'));
-  } else {
-    const absolute = absolutePath(path);
-    const arrayMd = recursive(absolute); */
-
   Promise.all(recursive(path).map((element) => readMD(element)))
     .then((elementsMD) => {
-      const juntar = [].concat(...elementsMD);
-      resolve(juntar);
+      const itemsArray = [].concat(...elementsMD);
+      resolve(itemsArray);
     })
     .catch((error) => {
       reject(error);
@@ -22,12 +16,15 @@ const mdLinks = (path) => new Promise((resolve, reject) => {
 });
 console.log(mdLinks(userPath));
 
-mdLinks(userPath)
-  .then((links) => console.log(links))
-  .catch((error) => {
-    console.error('*******************+', error);
-  });
-
+module.exports = {
+  mdLinks,
+  userPath,
+};
+/*  if (pathExists(path) === false) {
+    reject(new Error('La ruta no existe'));
+  } else {
+    const absolute = absolutePath(path);
+    const arrayMd = recursive(absolute); */
 /* const mdLinks = (path, options) => {
   if (pathExists(path === false)) {
     console.log('ruta no existe, fin...');

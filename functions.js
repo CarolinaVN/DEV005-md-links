@@ -3,20 +3,21 @@ const fs = require('fs');
 const path = require('path');
 const MarkdownIt = require('markdown-it');
 const { JSDOM } = require('jsdom');
-// const fetch = require('node-fetch');
-// const colors = require('colors');
+// const fetch = require('fetch');
+const colors = require('colors');
 
-const userPath = process.argv[2];
-// const route = '/Users/carolinavera/Desktop/LABORATORIA/DEV005-data-lovers';
-// const routeDirectorio = '/Users/carolinavera/Desktop/LABORATORIA/DEV005-md-links/prueba';
+// __________________RUTAS_____________________________
+// const routes = '/Users/carolinavera/Desktop/LABORATORIA/DEV005-data-lovers';
 // const routeFail = '/Users/carolinavera/Desktop/LABORATORIA/DEV005-data-lovers/Fail.md';
 // const relativeRoute = './DEV005-data-lovers/FAQ.md'
 // const withoutMD = '/Users/carolinavera/Desktop/DocCaro'
+const userPath = process.argv[2];
+const routeDirectorio = '/Users/carolinavera/Desktop/LABORATORIA/DEV005-md-links/prueba';
 
 // ------------- Valida sí la ruta existe  -------------------
 const pathExists = (route) => fs.existsSync(route);
 pathExists(userPath);
-// console.log(pathExists(userPath));
+// console.log(typeof pathExists());
 // ---------- Convierte una ruta relativa en absoluta ----------
 const absolutePath = (route) => path.resolve(route);
 absolutePath(userPath);
@@ -42,8 +43,8 @@ const recursive = (route, arrayMd = []) => {
 };
 // recursive(userPath); // .filter((file) => path.extname(file) === '.md');
 // ________para probar test
-// recursive(routeDirectorio);
-console.log(recursive(userPath));
+recursive(routeDirectorio);
+// console.log(recursive(userPath));
 
 // ----------- Buscar Links ---------------
 const getLinks = (data, file) => {
@@ -63,41 +64,54 @@ const getLinks = (data, file) => {
   });
   return allLinks;
 };
-/* /* getLinks(userPath).forEach((link) => {
-  fetch(link.href)
-    .then((response) => {
-      if (response.ok) {
-        console.log(`Link OK: ${link.href}`);
-      } else {
-        console.log(`Link Fail: ${link.href}`);
-      }
-    })
-    .catch((error) => {
-      console.log(`Hubo un problema con la petición Fetch: ${error.message}`);
-    });
-  return allLinks;
+// ---------- Verificar links --------------------
+const verifyLinks = (links) => Promise.all(links.map((link) => fetch(link.href)
+  .then((response) => {
+    if (response.ok) {
+      console.log('Ruta', link.file, 'Link', link.href, 'OK'.bgGreen, `${response.status}\n`);
+    } else {
+      console.log('Ruta', link.file, 'Link', link.href, 'Fail'.bgRed, `${response.status}\n`);
+    }
+  })
+  .catch((error) => {
+    console.log(`Hubo un problema con la petición Fetch: ${error.message}`);
+  })));
+/* const verifyLinks = (links) => {
+  links.forEach((link) => {
+    fetch(link.href)
+      .then((response) => {
+        if (response.ok) {
+          console.log('Ruta', link.file, 'Link', link.href, 'OK'.bgGreen, `${response.status}\n`);
+        } else {
+          console.log('Ruta', link.file, 'Link', link.href, 'Fail'.bgRed, `${response.status}\n`);
+        }
+      })
+      .catch((error) => {
+        console.log(`Hubo un problema con la petición Fetch: ${error.message}`);
+      });
+  });
 }; */
 // ------------leer los archivos MD ---------------------
 const readMD = (mD) => new Promise((resolve, reject) => {
   fs.readFile(mD, 'utf8', (err, data) => {
     if (err) reject(new Error(err));
     resolve(getLinks(data, mD));
+    // verifyLinks(getLinks(data, mD));
+    // resolve(verifyLinks(getLinks(data, mD)));
   });
 });
 
-/* fetch('https://developer.mozilla.org/') =>
-  .then((response) => response.stats)
-  .then((data) => console.log(data)); */
-
 module.exports = {
   userPath,
-  pathExists,
-  absolutePath,
   recursive,
-  getLinks,
   readMD,
+  verifyLinks,
 };
-
+// __________________RUTAS_____________________________
+// const route = '/Users/carolinavera/Desktop/LABORATORIA/DEV005-data-lovers';
+// const routeFail = '/Users/carolinavera/Desktop/LABORATORIA/DEV005-data-lovers/Fail.md';
+// const relativeRoute = './DEV005-data-lovers/FAQ.md'
+// const withoutMD = '/Users/carolinavera/Desktop/DocCaro'
 /*
 const readMDs = Promise.all(recursive(path).map((element) => readMD(element)))
     .then((elementsMD) => {
@@ -171,3 +185,18 @@ console.log(pathExists(userPath)); */
 };
 const arrayMd = recursive(userPath);
 console.log(recursive(userPath)); */
+
+/* /* getLinks(userPath).forEach((link) => {
+  fetch(link.href)
+    .then((response) => {
+      if (response.ok) {
+        console.log(`Link OK: ${link.href}`);
+      } else {
+        console.log(`Link Fail: ${link.href}`);
+      }
+    })
+    .catch((error) => {
+      console.log(`Hubo un problema con la petición Fetch: ${error.message}`);
+    });
+  return allLinks;
+}; */
