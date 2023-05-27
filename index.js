@@ -1,24 +1,36 @@
 const {
   userPath,
+  pathExists,
   recursive,
   readMD,
+  verifyLinks,
+  // checkLinks,
 } = require('./functions');
 
-const mdLinks = (path) => new Promise((resolve, reject) => {
+const mdLinks = (path, options = '') => new Promise((resolve, reject) => {
+  if (!pathExists(path)) {
+    reject(new Error('La ruta no existe. Por favor, ingresa una ruta valida.'));
+    return;
+  }
   Promise.all(recursive(path).map((element) => readMD(element)))
     .then((elementsMD) => {
-      const itemsArray = [].concat(...elementsMD);
-      resolve(itemsArray);
+      // const itemsArray = [].concat(...elementsMD);
+      const itemsArray = elementsMD.flat();
+      if (options.includes('--validate')) {
+        // resolve(checkLinks(itemsArray));
+        resolve(verifyLinks(itemsArray));
+      } else {
+        resolve(itemsArray);
+      }
     })
     .catch((error) => {
       reject(error);
     });
 });
-console.log(mdLinks(userPath));
+// console.log(mdLinks(userPath));
 
 module.exports = {
-  mdLinks,
-  userPath,
+  mdLinks, userPath,
 };
 /*  if (pathExists(path) === false) {
     reject(new Error('La ruta no existe'));

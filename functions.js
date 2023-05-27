@@ -1,9 +1,7 @@
-// const { clear } = require('console');
 const fs = require('fs');
 const path = require('path');
 const MarkdownIt = require('markdown-it');
 const { JSDOM } = require('jsdom');
-// const fetch = require('fetch');
 const colors = require('colors');
 
 // __________________RUTAS_____________________________
@@ -12,21 +10,19 @@ const colors = require('colors');
 // const relativeRoute = './DEV005-data-lovers/FAQ.md'
 // const withoutMD = '/Users/carolinavera/Desktop/DocCaro'
 const userPath = process.argv[2];
-const routeDirectorio = '/Users/carolinavera/Desktop/LABORATORIA/DEV005-md-links/prueba';
+// const routeDirectorio = '/Users/carolinavera/Desktop/LABORATORIA/DEV005-md-links/prueba';
 
 // ------------- Valida sí la ruta existe  -------------------
 const pathExists = (route) => fs.existsSync(route);
-pathExists(userPath);
-// console.log(typeof pathExists());
 // ---------- Convierte una ruta relativa en absoluta ----------
 const absolutePath = (route) => path.resolve(route);
-absolutePath(userPath);
-
+// ---------------------- Es un archivo ----------------------
+const isFiles = (route) => fs.statSync(route).isFile();
 // --Función recursiva --- Buscar archivos con extensión MD ----
 const recursive = (route, arrayMd = []) => {
   const stats = fs.statSync(route);
 
-  if (stats.isFile() && path.extname(route) === '.md') {
+  if (isFiles(route) && path.extname(route) === '.md') {
     const absolute = absolutePath(route);
     arrayMd.push(absolute);
   } else if (stats.isDirectory()) {
@@ -41,10 +37,6 @@ const recursive = (route, arrayMd = []) => {
   }
   return arrayMd;
 };
-// recursive(userPath); // .filter((file) => path.extname(file) === '.md');
-// ________para probar test
-recursive(routeDirectorio);
-// console.log(recursive(userPath));
 
 // ----------- Buscar Links ---------------
 const getLinks = (data, file) => {
@@ -67,51 +59,61 @@ const getLinks = (data, file) => {
 // ---------- Verificar links --------------------
 const verifyLinks = (links) => Promise.all(links.map((link) => fetch(link.href)
   .then((response) => {
-    if (response.ok) {
-      console.log('Ruta', link.file, 'Link', link.href, 'OK'.bgGreen, `${response.status}\n`);
-    } else {
-      console.log('Ruta', link.file, 'Link', link.href, 'Fail'.bgRed, `${response.status}\n`);
-    }
+    const validate = {
+      Ruta: link.file,
+      Link: link.href,
+      Status: response.status,
+      StatusText: response.statusText,
+    };
+    return validate;
   })
   .catch((error) => {
     console.log(`Hubo un problema con la petición Fetch: ${error.message}`);
   })));
-/* const verifyLinks = (links) => {
-  links.forEach((link) => {
-    fetch(link.href)
-      .then((response) => {
-        if (response.ok) {
-          console.log('Ruta', link.file, 'Link', link.href, 'OK'.bgGreen, `${response.status}\n`);
-        } else {
-          console.log('Ruta', link.file, 'Link', link.href, 'Fail'.bgRed, `${response.status}\n`);
-        }
-      })
-      .catch((error) => {
-        console.log(`Hubo un problema con la petición Fetch: ${error.message}`);
-      });
-  });
-}; */
+const checkLinks = (array) => new Promise((resolve, reject) => {
+  verifyLinks(array)
+    .then((res) => resolve(res))
+    .catch((err) => reject(err));
+});
+const statsLinks = (links, verifyResults) => {
+  const totalLinks = links.length;
+  const uniqueLinks = new Set(links.map((elem) => elem.href));
+  const uniqueLinksCount = uniqueLinks.size;
+  const brokenLinksCount = links.filter((result) => result.Status === 404).length;
+  console.log('roooootos', brokenLinksCount);
+  if (verifyResults) {
+    return {
+      Broken: brokenLinksCount,
+      Total: totalLinks,
+      Unique: uniqueLinksCount,
+    };
+  }
+  return {
+    Total: totalLinks,
+    Unique: uniqueLinksCount,
+  };
+};
+
 // ------------leer los archivos MD ---------------------
 const readMD = (mD) => new Promise((resolve, reject) => {
   fs.readFile(mD, 'utf8', (err, data) => {
     if (err) reject(new Error(err));
     resolve(getLinks(data, mD));
-    // verifyLinks(getLinks(data, mD));
-    // resolve(verifyLinks(getLinks(data, mD)));
   });
 });
 
 module.exports = {
   userPath,
+  absolutePath,
+  pathExists,
   recursive,
   readMD,
   verifyLinks,
+  getLinks,
+  checkLinks,
+  statsLinks,
 };
-// __________________RUTAS_____________________________
-// const route = '/Users/carolinavera/Desktop/LABORATORIA/DEV005-data-lovers';
-// const routeFail = '/Users/carolinavera/Desktop/LABORATORIA/DEV005-data-lovers/Fail.md';
-// const relativeRoute = './DEV005-data-lovers/FAQ.md'
-// const withoutMD = '/Users/carolinavera/Desktop/DocCaro'
+
 /*
 const readMDs = Promise.all(recursive(path).map((element) => readMD(element)))
     .then((elementsMD) => {
@@ -199,4 +201,40 @@ console.log(recursive(userPath)); */
       console.log(`Hubo un problema con la petición Fetch: ${error.message}`);
     });
   return allLinks;
+}; */
+//----------------
+/* const verifyLinks = (links) => {
+  links.forEach((link) => {
+    fetch(link.href)
+      .then((response) => {
+        if (response.ok) {
+          console.log('Ruta', link.file, 'Link', link.href, 'OK'.bgGreen, `${response.status}\n`);
+        } else {
+          console.log('Ruta', link.file, 'Link', link.href, 'Fail'.bgRed, `${response.status}\n`);
+        }
+      })
+      .catch((error) => {
+        console.log(`Hubo un problema con la petición Fetch: ${error.message}`);
+      });
+  });
+}; */
+//------------------
+/* const statsAndV = (links) => {
+  const broken = [];
+  const unique = [];
+
+  links.forEach((item) => {
+    if (!unique.includes(item.href)) {
+      unique.push(item.href);
+    }
+    if (item.message === 'fail') {
+      broken.push(item);
+    }
+  });
+
+  return {
+    Total: links.length,
+    Unique: unique.length,
+    Broken: broken.length,
+  };
 }; */
