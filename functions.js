@@ -75,13 +75,13 @@ const checkLinks = (array) => new Promise((resolve, reject) => {
     .then((res) => resolve(res))
     .catch((err) => reject(err));
 });
-const statsLinks = (links, verifyResults) => {
+
+const statsLinks = (links, stats = false) => {
   const totalLinks = links.length;
   const uniqueLinks = new Set(links.map((elem) => elem.href));
   const uniqueLinksCount = uniqueLinks.size;
   const brokenLinksCount = links.filter((result) => result.Status === 404).length;
-  console.log('roooootos', brokenLinksCount);
-  if (verifyResults) {
+  if (stats) {
     return {
       Broken: brokenLinksCount,
       Total: totalLinks,

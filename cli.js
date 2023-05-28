@@ -2,39 +2,32 @@ const { mdLinks, userPath } = require('./index');
 const { statsLinks } = require('./functions');
 
 const userOptions = process.argv[3];
+const userOptions2 = process.argv[4];
 
-mdLinks(userPath, userOptions)
-  .then((links) => {
-    // console.log(links, 'hooooola');
-    if (userOptions === '--stats') {
-      console.log(statsLinks(links));
-      console.log('Estamos trabajando para usted :D'.bgYellow);
-    } else {
-      console.log(links);
-    }
-  })
-  .catch((error) => {
-    console.error('*******************+', error);
-  });
-
-/* const cli = (validate) => new Promise((resolve, reject) => {
-  mdLinks(userPath)
+if (userOptions === undefined && userOptions2 === undefined) {
+  mdLinks(userPath, { validate: false })
     .then((links) => {
-      if (validate === userPath2(true)) {
-        verifyLinks(links);
-      } else {
-        console.log(links);
-      }
-    })
-    .catch((error) => {
-      reject(error);
+      console.log(links);
     });
-});
-console.log(cli(userPath2)); */
+}
+if (userOptions === '--validate' && userOptions2 === undefined) {
+  mdLinks(userPath, { validate: true })
+    .then((links) => {
+      console.log(links);
+    });
+}
 
-/* mdLinks(userPath)
-  .then((links) => verifyLinks(links))
-   console.log(links))
-  .catch((error) => {
-    console.error('*******************+', error);
-  }); */
+if (userOptions === '--stats' && userOptions2 === undefined) {
+  mdLinks(userPath, { validate: false })
+    .then((links) => {
+      console.log(statsLinks(links));
+    });
+}
+
+if ((userOptions === '--stats' && userOptions2 === '--validate') || (userOptions === '--validate' && userOptions2 === '--stats')) {
+  mdLinks(userPath, { validate: true })
+    .then((links) => {
+      console.log(links);
+      console.log(statsLinks(links, true));
+    });
+}
