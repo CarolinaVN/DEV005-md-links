@@ -4,6 +4,7 @@ const {
   recursive,
   readMD,
   verifyLinks,
+  // checkLinks,
 } = require('./functions');
 
 const mdLinks = (path, options = { validate: false }) => new Promise((resolve, reject) => {

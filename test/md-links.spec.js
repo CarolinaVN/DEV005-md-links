@@ -4,7 +4,11 @@ const {
   pathExists,
   absolutePath,
   getLinks,
+  verifyLinks,
+  statsLinks,
 } = require('../functions');
+// const mdLinks = require('../index');
+const mdLinks = require('../cli');
 
 describe('Funciones', () => {
   it('debería devolver true si la ruta existe', () => {
@@ -29,7 +33,7 @@ describe('Funciones', () => {
     const resultArray = recursive(userPath);
     expect(resultArray).toEqual(expectedArray);
   });
-  it('should return an array with the info of each link as an object (href, text, file)', () => {
+  it('Retorna un array de objetos con href, text, file', () => {
     const fileRoute = '/Users/carolinavera/Desktop/LABORATORIA/DEV005-md-links/prueba/carpeta2/pinterest.md';
     const dataOfFile = '[Pinterest](https://www.pinterest.cl/pin/591871576049876172/)';
     const arrayLinkInfo = [
@@ -40,6 +44,38 @@ describe('Funciones', () => {
       },
     ];
     expect(getLinks(dataOfFile, fileRoute)).toEqual(arrayLinkInfo);
+  });
+});
+
+const userOptions = '--validate';
+const userOptions2 = undefined;
+const userPath = '/Users/carolinavera/Desktop/LABORATORIA/DEV005-md-links/prueba/carpeta2/pinterest.md';
+const expectedOutput = [
+  {
+    Ruta: '/Users/carolinavera/Desktop/LABORATORIA/DEV005-md-links/prueba/carpeta2/pinterest.md',
+    Link: 'https://www.pinterest.cl/pin/591871576049876172/',
+    Status: 200,
+    StatusText: 'OK',
+  },
+];
+
+jest.mock('./mdLinks', () => jest.fn().mockResolvedValue(expectedOutput));
+
+describe('mdLinks', () => {
+  it('Se espera validate true', () => {
+    const resultPromise = verifyLinks(userPath, userOptions, userOptions2);
+
+    expect(mdLinks).toHaveBeenCalledWith(userPath, { validate: true });
+
+    return resultPromise.then(() => {
+      expectedOutput.forEach((link) => {
+        expect(console.log).toHaveBeenCalledWith(`Ruta: ${link.Ruta}`);
+        expect(console.log).toHaveBeenCalledWith(`Link: ${link.Link}`);
+        expect(console.log).toHaveBeenCalledWith(`Status: ${link.Status}`);
+        expect(console.log).toHaveBeenCalledWith(`StatusText: ${link.StatusText}`);
+        expect(console.log).toHaveBeenCalledWith('');
+      });
+    });
   });
 });
 

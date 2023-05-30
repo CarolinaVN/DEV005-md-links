@@ -82,16 +82,9 @@ const statsLinks = (links, stats = false) => {
   const uniqueLinksCount = uniqueLinks.size;
   const brokenLinksCount = links.filter((result) => result.Status === 404).length;
   if (stats) {
-    return {
-      Broken: brokenLinksCount,
-      Total: totalLinks,
-      Unique: uniqueLinksCount,
-    };
+    return (`Total: ${totalLinks} Unique: ${uniqueLinksCount} Broken: ${brokenLinksCount}`).bgWhite;
   }
-  return {
-    Total: totalLinks,
-    Unique: uniqueLinksCount,
-  };
+  return (`Total: ${totalLinks} Unique: ${uniqueLinksCount}`).green;
 };
 
 // ------------leer los archivos MD ---------------------
@@ -238,3 +231,17 @@ console.log(recursive(userPath)); */
     Broken: broken.length,
   };
 }; */
+
+/* const validate = {
+  Ruta: link.file,
+  Link: link.href,
+  Status: response.status,
+  StatusText: response.statusText,
+}; */
+/*    const validate = `Ruta: ${link.file}
+ Link: ${link.href}
+ Status: ${response.status}
+ StatusText: ${response.statusText}`;
+return validate;
+}) */
+// [FAIL GOOGLE](https://www.googlx.com)
