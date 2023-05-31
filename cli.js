@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+
+// const colors = require('colors');
 const { mdLinks, userPath } = require('./index');
 const { statsLinks } = require('./functions');
 
@@ -19,10 +22,11 @@ if (userOptions === '--validate' && userOptions2 === undefined) {
   mdLinks(userPath, { validate: true })
     .then((links) => {
       links.forEach((link) => {
-        console.log(`Ruta: ${link.Ruta}`);
+        console.log(`Route: ${link.Ruta}`);
+        console.log(`Texto: ${link.Text}`);
         console.log(`Link: ${link.Link}`);
-        console.log(`Status: ${link.Status}`);
-        console.log(`StatusText: ${link.StatusText}`);
+        console.log(`Status: ${link.Code}`);
+        console.log(`StatusText: ${link.Status}`);
         console.log('');
       });
     });

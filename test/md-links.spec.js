@@ -5,10 +5,7 @@ const {
   absolutePath,
   getLinks,
   verifyLinks,
-  statsLinks,
 } = require('../functions');
-// const mdLinks = require('../index');
-const mdLinks = require('../cli');
 
 describe('Funciones', () => {
   it('debería devolver true si la ruta existe', () => {
@@ -45,42 +42,25 @@ describe('Funciones', () => {
     ];
     expect(getLinks(dataOfFile, fileRoute)).toEqual(arrayLinkInfo);
   });
+
+  const mockData = [
+    {
+      Link: 'https://www.pinterest.cl/pin/591871576049876172/',
+      Ruta: '/Users/carolinavera/Desktop/LABORATORIA/DEV005-md-links/prueba/carpeta2/pinterest.md',
+      Code: 200,
+      Status: 'OK'.bgGreen,
+    },
+  ];
+  const arrayArg = [
+    {
+      href: 'https://www.pinterest.cl/pin/591871576049876172/',
+      text: 'Pinterest',
+      file: '/Users/carolinavera/Desktop/LABORATORIA/DEV005-md-links/prueba/carpeta2/pinterest.md',
+    },
+  ];
+  global.fetch = jest.fn(() => Promise.resolve({ status: 200, statusText: 'OK' }));
+
+  it('Retorna array con infor de link (status, statusText)', () => verifyLinks(arrayArg).then((data) => {
+    expect(data).toEqual(mockData);
+  }));
 });
-
-const userOptions = '--validate';
-const userOptions2 = undefined;
-const userPath = '/Users/carolinavera/Desktop/LABORATORIA/DEV005-md-links/prueba/carpeta2/pinterest.md';
-const expectedOutput = [
-  {
-    Ruta: '/Users/carolinavera/Desktop/LABORATORIA/DEV005-md-links/prueba/carpeta2/pinterest.md',
-    Link: 'https://www.pinterest.cl/pin/591871576049876172/',
-    Status: 200,
-    StatusText: 'OK',
-  },
-];
-
-jest.mock('./mdLinks', () => jest.fn().mockResolvedValue(expectedOutput));
-
-describe('mdLinks', () => {
-  it('Se espera validate true', () => {
-    const resultPromise = verifyLinks(userPath, userOptions, userOptions2);
-
-    expect(mdLinks).toHaveBeenCalledWith(userPath, { validate: true });
-
-    return resultPromise.then(() => {
-      expectedOutput.forEach((link) => {
-        expect(console.log).toHaveBeenCalledWith(`Ruta: ${link.Ruta}`);
-        expect(console.log).toHaveBeenCalledWith(`Link: ${link.Link}`);
-        expect(console.log).toHaveBeenCalledWith(`Status: ${link.Status}`);
-        expect(console.log).toHaveBeenCalledWith(`StatusText: ${link.StatusText}`);
-        expect(console.log).toHaveBeenCalledWith('');
-      });
-    });
-  });
-});
-
-/* describe('mdLinks', () => {
-  it('should...', () => {
-    console.log('FIX ME!');
-  });
-}); */
