@@ -47,6 +47,7 @@ describe('Funciones', () => {
     {
       Link: 'https://www.pinterest.cl/pin/591871576049876172/',
       Ruta: '/Users/carolinavera/Desktop/LABORATORIA/DEV005-md-links/prueba/carpeta2/pinterest.md',
+      Text: 'Pinterest',
       Code: 200,
       Status: 'OK'.bgGreen,
     },

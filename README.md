@@ -1,7 +1,7 @@
 # Markdown Links
 
 ***
-Esta es una herramienta de línea de comando (CLI) y una biblioteca que permite buscar y analizar enlaces en archivos `Markdown` (.md). Está desarrollada en `Node.js` y utiliza la API de Fetch para realizar solicitudes __HTTP__ y validar los enlaces. También incluye pruebas unitarias con `Jest` para garantizar la calidad del código. Puedes instalarla fácilmente a través de __npm__.
+Esta es una herramienta de línea de comando (CLI) y biblioteca que permite buscar y analizar enlaces en archivos `Markdown` (.md). Está desarrollada en `Node.js` y utiliza la API de Fetch para realizar solicitudes __HTTP__ y validar los enlaces. También incluye pruebas unitarias con `Jest` para garantizar la calidad del código. Puedes instalarla fácilmente a través de __npm__.
 
 
 ## 1. Instalación 
@@ -18,7 +18,7 @@ const mdLinks = require('Caro/DEV005-md-links').mdLinks //CommonJS
 
 ```
 
-## 2. Como usarlo
+## 2. Modo de uso
 
 Desde tu terminal utliza el siguiente comando 
 ```sh

@@ -88,7 +88,7 @@ const statsLinks = (links) => {
 };
 
 const broken = (link) => {
-  const brokenLinksCount = link.filter((result) => result.Status !== 'OK'.bgGreen).length;
+  const brokenLinksCount = link.filter((result) => result.Status !== 'OK'.bgGreen);
   return brokenLinksCount;
 };
 
@@ -113,3 +113,18 @@ module.exports = {
   statsLinks,
   broken,
 };
+
+/* console.log(`
+href: ${link.file}
+text: ${link.href}
+file: ${link.text}
+`);
+
+console.log(`
+Route: ${link.Ruta},
+Texto: ${link.Text},
+Link: ${link.Link},
+Code: ${link.Code},
+Status: ${link.Status},
+ `);
+ */
