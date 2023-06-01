@@ -1,6 +1,9 @@
 {
-  "name": "md-links-Carolina-Vera",
-  "version": "0.1.0",
+  "name": "md-links-carolina-vera",
+  "description": "biblioteca que permite buscar y analizar enlaces en archivos Markdown (.md)",
+  "main": "./cli.js",
+  "author": "@carolina-vn",
+  "version": "0.1.1",
   "bin": {
     "md-links": "./cli.js"
   },

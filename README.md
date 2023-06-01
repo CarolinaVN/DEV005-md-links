@@ -6,17 +6,11 @@ Esta es una herramienta de línea de comando (CLI) y biblioteca que permite busc
 
 ## 1. Instalación 
 
-Para instalar debes ejecutar lo siguiente comando en tu terminal: 
+Para instalar debes ejecutar el siguiente comando en tu terminal: 
 ```sh
-escribe algo aqui________________
+npm i md-links-carolina-vera
 ```
-Ya esta listo para utilizar biblioteca, si necesitas usarlo desde `Node.js` no olvides importar en tu archivo de la seguiente forma:
-
-```js
-const mdLinks = require('Caro/DEV005-md-links').mdLinks //CommonJS
- *import { mdLinks } from 'Caro/DEV005-md-links'; //ES Modules
-
-```
+Esta listo! ya utilizar la biblioteca
 
 ## 2. Modo de uso
 
