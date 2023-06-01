@@ -80,15 +80,16 @@ const verifyLinks = (links) => Promise.all(links.map((link) => fetch(link.href)
     return validateFail;
   })));
 
-const statsLinks = (links, stats = false) => {
+const statsLinks = (links) => {
   const totalLinks = links.length;
-  const uniqueLinks = new Set(links.map((elem) => elem.href));
-  const uniqueLinksCount = uniqueLinks.size;
-  const brokenLinksCount = links.filter((result) => result.Status !== 'OK'.bgGreen).length;
-  if (stats) {
-    return (`Total: ${totalLinks} Unique: ${uniqueLinksCount} Broken: ${brokenLinksCount}`).bgYellow;
-  }
-  return (`Total: ${totalLinks} Unique: ${uniqueLinksCount}`).bgMagenta;
+  const prueba = links.map((element) => element.href);
+  const uniqueLinks = new Set(prueba).size;
+  return (`Total: ${totalLinks} Unique: ${uniqueLinks}`).bgMagenta;
+};
+
+const broken = (link) => {
+  const brokenLinksCount = link.filter((result) => result.Status !== 'OK'.bgGreen).length;
+  return brokenLinksCount;
 };
 
 // ------------leer los archivos MD ---------------------
@@ -110,4 +111,5 @@ module.exports = {
   getLinks,
   // checkLinks,
   statsLinks,
+  broken,
 };

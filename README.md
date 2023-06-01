@@ -1,21 +1,55 @@
 # Markdown Links
 
-## Índice
-
-* [1. Preámbulo](#1-preámbulo)
-* [2. Resumen del proyecto](#2-resumen-del-proyecto)
-* [3. Objetivos de aprendizaje](#3-objetivos-de-aprendizaje)
-* [4. Consideraciones generales](#4-consideraciones-generales)
-* [5. Criterios de aceptación mínimos del proyecto](#5-criterios-de-aceptación-mínimos-del-proyecto)
-* [6. Entregables](#6-entregables)
-* [7. Hacker edition](#7-hacker-edition)
-* [8. Pistas, tips y lecturas complementarias](#8-pistas-tips-y-lecturas-complementarias)
-* [9. Checklist](#9-checklist)
-* [10. Achicando el problema](#10-achicando-el-problema)
-
 ***
+Esta es una herramienta de línea de comando (CLI) y librería instalable que facilita la búsqueda y análisis de enlaces dentro de archivos markdown (extensión .md), retorna un listado de links que se encunetran en el documento o directorio que el usuario facilita. Además, si agrega la opción `--validate`, entrega el estatus del link; por otro lado agregamos la opción `--stats`, nos ayuda a comprobar que los enlaces estén correctos o, de lo contrario, nos indica cuántos enlaces están rotos.
 
-## 1. Preámbulo
+
+## 1. Instalación 
+
+Para instalar debes ejecutar lo siguiente comando en tu terminal: 
+```sh
+escribe algo aqui________________
+```
+Ya esta listo para utilizar biblioteca, si necesitas usarlo desde `node.js` no olvides importar en tu archivo de la seguiente forma:
+
+```js
+const mdLinks = require('Caro/DEV005-md-links').mdLinks //CommonJS
+ *import { mdLinks } from 'Caro/DEV005-md-links'; //ES Modules
+
+```
+
+## 2. Como usarlo
+
+Desde tu terminal utliza el siguiente comando 
+```sh
+md-links <path-to-file-or-directory> [--validate] [--stats]
+```
+El parámetro inicial es `md-links`, es la palabra clave con la que nuestra biblioteca inicia su funcionamiento. Luego, continuamos con`<path-to-file-or-directory>`, que representa la ruta del archivo o directorio del cual deseas obtener la información. Por último, puedes agregar `--validate` y/o `--stats` según los datos que desees obtener.
+
+### Ejemplo de uso
+
+* Para *extraer* los links de un archivo debes ejecutar el siguiente comando:
+```sh
+md-links README.md
+```
+* Para *validar* los links de un archivo debes ejecutar el siguiente comando:
+```sh
+md-links README.md --validate
+```
+* Para obtener *estadísticas* de los links de un archivo debes ejecutar el siguiente comando:
+```sh
+md-links README.md --stats
+```
+* Para obtener *estadísticas* y *validar* los links de un archivo debes ejecutar el siguiente comando:
+```sh
+md-links README.md --stats --validate 
+```
+## 1. Diagrama de flujo
+Aqui puedes encontrar el diagrama de flujo de este proyecto
+![Diagrama-de-flujo](./IMG/diagrama.png)
+
+
+
 
 [Markdown](https://es.wikipedia.org/wiki/Markdown) es un lenguaje de marcado
 ligero muy popular entre developers. Es usado en muchísimas plataformas que
@@ -23,7 +57,7 @@ manejan texto plano (GitHub, foros, blogs, ...) y es muy común
 encontrar varios archivos en ese formato en cualquier tipo de repositorio
 (empezando por el tradicional `README.md`).
 
-Estos archivos `Markdown` normalmente contienen _links_ (vínculos/ligas) que
+Estos archivos `Markdown` normalmente contienen *links* (vínculos/ligas) que
 muchas veces están rotos o ya no son válidos y eso perjudica mucho el valor de
 la información que se quiere compartir.
 
@@ -44,7 +78,7 @@ programa que se ejecute usando Node.js. Aprenderemos sobre procesos
 (`process.env`, `process.argv`, ...), cómo interactuar con el sistema archivos,
 cómo hacer consultas de red, etc.
 
-[Node.js](https://nodejs.org/es/) es un entorno de ejecución para JavaScript
+ es un entorno de ejecución para JavaScript
 construido con el [motor de JavaScript V8 de Chrome](https://developers.google.com/v8/).
 Esto nos va a permitir ejecutar JavaScript en el entorno del sistema operativo,
 ya sea tu máquina o un servidor, lo cual nos abre las puertas para poder
@@ -364,12 +398,7 @@ manera a través de la **terminal**:
 
 Por ejemplo:
 
-```sh
-$ md-links ./some/example.md
-./some/example.md http://algo.com/2/3/ Link a algo
-./some/example.md https://otra-cosa.net/algun-doc.html algún doc
-./some/example.md http://google.com/ Google
-```
+
 
 El comportamiento por defecto no debe validar si las URLs responden ok o no,
 solo debe identificar el archivo markdown (a partir de la ruta que recibe como

@@ -2,7 +2,7 @@
 
 // const colors = require('colors');
 const { mdLinks, userPath } = require('./index');
-const { statsLinks } = require('./functions');
+const { statsLinks, broken } = require('./functions');
 
 const userOptions = process.argv[3];
 const userOptions2 = process.argv[4];
@@ -39,9 +39,10 @@ if (userOptions === '--stats' && userOptions2 === undefined) {
 }
 
 if ((userOptions === '--stats' && userOptions2 === '--validate') || (userOptions === '--validate' && userOptions2 === '--stats')) {
-  mdLinks(userPath, { validate: true })
+  mdLinks(userPath, { validate: false })
     .then((links) => {
-      console.log(statsLinks(links, true));
+      const a = statsLinks(links);
+      console.log(`${a} Broken: ${broken.length}`);
     });
 }
 
